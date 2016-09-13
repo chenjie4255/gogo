@@ -49,3 +49,16 @@ func TestError(t *testing.T) {
 	}
 	fmt.Println(err)
 }
+
+func funcFail() error {
+	time.Sleep(100 * time.Millisecond)
+	return errors.New("just fail")
+}
+
+func TestFail(t *testing.T) {
+	err := Run(Fns{calcPart1a, funcFail, calcPart1b})
+	if err == nil {
+		t.Fatal("should have error happend!")
+	}
+	fmt.Println(err)
+}
