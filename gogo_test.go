@@ -36,3 +36,16 @@ func TestGOGO(t *testing.T) {
 		t.Fatal("should fail on calcpart2")
 	}
 }
+
+func calcPanic() error {
+	panic("ppp")
+	return nil
+}
+
+func TestError(t *testing.T) {
+	err := Run(Fns{calcPart1a, calcPanic, calcPart1b, calcPanic, calcPanic, calcPanic, calcPanic, calcPanic, calcPanic, calcPanic})
+	if err == nil {
+		t.Fatal("should have error happend!")
+	}
+	fmt.Println(err)
+}
