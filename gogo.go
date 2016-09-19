@@ -1,7 +1,7 @@
 package gogo
 
 import (
-	"errors"
+	"fmt"
 	"sync"
 )
 
@@ -9,7 +9,12 @@ type Fn func() error
 type Fns []Fn
 
 func Run(fnQueue ...Fns) error {
-	errChan := make(chan error)
+	sumFn := 0
+	for _, q := range fnQueue {
+		sumFn += len(q)
+	}
+
+	errChan := make(chan error, sumFn)
 	isExit := false
 	var mux sync.RWMutex
 	defer func() {
@@ -30,7 +35,7 @@ func Run(fnQueue ...Fns) error {
 						mux.RLock()
 						defer mux.RUnlock()
 						if !isExit {
-							errChan <- errors.New("panic on func...")
+							errChan <- fmt.Errorf("catch function panic(%v)", e)
 						}
 					}
 				}()
