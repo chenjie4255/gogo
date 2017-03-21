@@ -2,6 +2,7 @@ package gogo
 
 import (
 	"fmt"
+	"runtime/debug"
 	"sync"
 )
 
@@ -35,7 +36,7 @@ func Run(fnQueue ...Fns) error {
 						mux.RLock()
 						defer mux.RUnlock()
 						if !isExit {
-							errChan <- fmt.Errorf("catch function panic(%v)", e)
+							errChan <- fmt.Errorf("catch function panic(%v) , %s", e, debug.Stack())
 						}
 					}
 				}()
